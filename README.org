@@ -1,0 +1,12 @@
+* ivy-omni-org
+This is an Emacs package which lets you access Org buffers, Org files,
+and Org bookmarks via a single Ivy interface. This is analogous to
+=ivy-switch-buffer= with virtual buffers enabled.
+** Usage
+Run =ivy-omni-org= command.
+** To-Dos
+- [ ] Add an action to visit the entry in other window
+- [ ] Add an action to kill the selected buffer
+- [ ] Add an action to create an entry or fire =org-capture=
+** License
+GPL v3
