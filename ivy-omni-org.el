@@ -156,5 +156,15 @@ _ARGS is a list of arguments as passed to `all-completions'."
     ((pred file-exists-p) (find-file inp))
     ((pred bookmark-get-bookmark) (bookmark-jump inp))))
 
+(defun ivy-omni-org--other-window-action (inp)
+  "Open INP (file/buffer/bookmark) in other window."
+  (pcase inp
+    ((pred get-buffer) (switch-to-buffer-other-window inp))
+    ((pred file-exists-p) (find-file-other-window inp))
+    ((pred bookmark-get-bookmark) (bookmark-jump-other-window inp))))
+
+(ivy-add-actions 'ivy-omni-org
+                 '(("j" ivy-omni-org--other-window-action "other window")))
+
 (provide 'ivy-omni-org)
 ;;; ivy-omni-org.el ends here

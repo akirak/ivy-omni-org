@@ -5,7 +5,7 @@ and Org bookmarks via a single Ivy interface. This is analogous to
 ** Usage
 Run =ivy-omni-org= command.
 ** To-Dos
-- [ ] Add an action to visit the entry in other window
+- [X] Add an action to visit the entry in other window
 - [ ] Add an action to kill the selected buffer
 - [ ] Add an action to create an entry or fire =org-capture=
 ** License
