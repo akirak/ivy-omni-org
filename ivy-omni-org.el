@@ -98,18 +98,20 @@
   "The default display transformer for `ivy-omni-org'.
 
 INP is an entry in the Ivy command."
-  (cond
-   ((get-buffer inp)
-    (ivy-omni-org--prepend-entry-type "buffer"
-      (funcall ivy-omni-org-buffer-display-transformer inp)))
-   ((file-exists-p inp)
-    (ivy-omni-org--prepend-entry-type "file"
-      (funcall ivy-omni-org-file-display-transformer inp)))
-   ;; Fallback
-   ((bookmark-get-bookmark inp)
-    (ivy-omni-org--prepend-entry-type "bookmark"
-      (funcall ivy-omni-org-bookmark-display-transformer inp)))
-   (t (error "Unexpected input to the display transformer: %s" inp))))
+  (condition-case _
+      (cond
+       ((get-buffer inp)
+        (ivy-omni-org--prepend-entry-type "buffer"
+          (funcall ivy-omni-org-buffer-display-transformer inp)))
+       ((file-exists-p inp)
+        (ivy-omni-org--prepend-entry-type "file"
+          (funcall ivy-omni-org-file-display-transformer inp)))
+       ;; Fallback
+       ((bookmark-get-bookmark inp)
+        (ivy-omni-org--prepend-entry-type "bookmark"
+          (funcall ivy-omni-org-bookmark-display-transformer inp)))
+       (t (error "Unexpected input to the display transformer: %s" inp)))
+    (error inp)))
 
 (ivy-set-display-transformer
  'ivy-omni-org
