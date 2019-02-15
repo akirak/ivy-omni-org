@@ -149,9 +149,11 @@ _ARGS is a list of arguments as passed to `all-completions'."
                  (-flatten (mapcar (lambda (source)
                                      (cl-etypecase nil
                                        (function (funcall source))
-                                       (symbol (if (boundp source)
-                                                   (symbol-value source)
-                                                 (error "Unbound source: %s" source)))))
+                                       (symbol (cond
+                                                ((fboundp source)
+                                                 (funcall source))
+                                                ((boundp source)
+                                                 (symbol-value source))))))
                                    ivy-omni-org-file-sources))
                  :test #'file-equal-p))
          (unloaded-files (seq-difference files loaded-files #'file-equal-p))
