@@ -34,23 +34,32 @@
 
 (require 'ivy)
 
+(defgroup ivy-omni-org nil
+  "Ivy interface to Org buffers, files, and bookmarks."
+  :group 'org
+  :group 'ivy)
+
 ;;;; Custom variables
 (defcustom ivy-omni-org-file-sources nil
   "List of sources producing a list of Org files."
-  :type '(repeat (choice symbol function)))
+  :type '(repeat (choice symbol function))
+  :group 'ivy-omni-org)
 
 (defcustom ivy-omni-org-buffer-display-transformer
   'ivy-omni-org-default-buffer-transformer
   "Display transformer for Org buffers."
-  )
+  :type 'function
+  :group 'ivy-omni-org)
 (defcustom ivy-omni-org-file-display-transformer
   'ivy-omni-org-default-file-transformer
   "Display transformer for Org files."
-  )
+  :type 'function
+  :group 'ivy-omni-org)
 (defcustom ivy-omni-org-bookmark-display-transformer
   'ivy-omni-org-default-bookmark-transformer
   "Display transformer for Org bookmarks."
-  )
+  :type 'function
+  :group 'ivy-omni-org)
 
 ;;;; Faces
 (defface ivy-omni-org-file-name
