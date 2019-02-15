@@ -4,7 +4,7 @@
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
 ;; Version: 0.1
-;; Package-Requires: ((emacs "25.1") (ivy "0.10"))
+;; Package-Requires: ((emacs "25.1") (ivy "0.10") (dash "2.12"))
 ;; Keywords: outlines
 ;; URL: https://github.com/akirak/ivy-omni-org
 
@@ -33,6 +33,9 @@
 ;;; Code:
 
 (require 'ivy)
+(require 'bookmark)
+(require 'dash)
+(require 'cl-lib)
 
 (defgroup ivy-omni-org nil
   "Ivy interface to Org buffers, files, and bookmarks."
@@ -145,7 +148,7 @@ _ARGS is a list of arguments as passed to `all-completions'."
                 (mapcar #'get-buffer (internal-complete-buffer "" nil t))))
          (bufnames (mapcar #'buffer-name bufs))
          (loaded-files (delq nil (mapcar #'buffer-file-name bufs)))
-         (files (delete-duplicates
+         (files (cl-delete-duplicates
                  (-flatten (mapcar (lambda (source)
                                      (cl-etypecase nil
                                        (function (funcall source))
@@ -177,7 +180,8 @@ _ARGS is a list of arguments as passed to `all-completions'."
     ((pred bookmark-get-bookmark) (bookmark-jump-other-window inp))))
 
 (defun ivy-omni-org--edit-entry-action (inp)
-  (if (ignore-errors switch-to-buffer)
+  "Edit an entry on INP."
+  (if (ignore-errors (bookmark-get-bookmark inp))
       (bookmark-rename inp)
     (message "%s is not a bookmark" inp)))
 
