@@ -3,10 +3,29 @@
 This is an Emacs package which lets you access Org buffers, Org files,
 and Org bookmarks via a single Ivy interface. This is analogous to
 =ivy-switch-buffer= with virtual buffers enabled.
+
+[[file:screenshots/ivy-omni-org-1.png]]
+
+Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to decorate buffer entries in this screenshot.
 ** Prerequisites
 - Emacs 25.1
 - ivy
 - dash
+** Configuration
+*** File sources
+To configure the list of files, set =ivy-omni-org-file-sources= variable:
+
+#+begin_src emacs-lisp
+  (setq ivy-omni-org-file-sources '(org-agenda-files))
+#+end_src
+
+=ivy-omni-org-file-sources= variable is a list of symbols, and each symbol in the list can be either a function returning a list of files or a variable containing a list of files.
+
+If you are using [[https://github.com/akirak/org-starter][org-starter]] package, the following setting is recomended:
+
+#+begin_src emacs-lisp
+  (setq ivy-omni-org-file-sources '(org-starter-known-files))
+#+end_src
 ** Usage
 Run =ivy-omni-org= command.
 ** To-Dos
