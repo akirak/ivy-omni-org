@@ -165,30 +165,22 @@ _ARGS is a list of arguments as passed to `all-completions'."
             unloaded-files
             (mapcar #'car bookmarks))))
 
-(defun ivy-omni-org--action (inp)
-  "The default action of `ivy-omni-org' on INP."
-  (pcase inp
-    ((pred get-buffer) (switch-to-buffer inp))
-    ((pred file-exists-p) (find-file inp))
-    ((pred bookmark-get-bookmark) (bookmark-jump inp))))
+(defun ivy-omni-org--find-file-with-display-func (file display-func)
+  (funcall display-func (find-file-noselect file)))
 
-(defun ivy-omni-org--other-window-action (inp)
-  "Open INP (file/buffer/bookmark) in other window."
-  (pcase inp
-    ((pred get-buffer) (switch-to-buffer-other-window inp))
-    ((pred file-exists-p) (find-file-other-window inp))
-    ((pred bookmark-get-bookmark) (bookmark-jump-other-window inp))))
+(defmacro ivy-omni-org--make-display-action (display-func)
+  "Make an action on input using DISPLAY-FUNC."
+  `(lambda (inp)
+     (pcase inp
+       ((pred get-buffer)
+        (funcall ,display-func inp))
+       ((pred file-exists-p)
+        (ivy-omni-org--find-file-with-display-func inp ,display-func))
+       ((pred bookmark-get-bookmark)
+        (bookmark-jump inp ,display-func)))))
 
-(defun ivy-omni-org--other-frame-action (inp)
-  "Open INP (file/buffer/bookmark) in other frame."
-  (pcase inp
-    ((pred get-buffer) (switch-to-buffer-other-frame inp))
-    ((pred file-exists-p) (find-file-other-frame inp))
-    ((pred bookmark-get-bookmark) (ivy-omni-org--bookmark-jump-other-frame inp))))
-
-(defun ivy-omni-org--bookmark-jump-other-frame (bookmark)
-  "Open BOOKMARK in other frame."
-  (bookmark-jump bookmark 'switch-to-buffer-other-frame))
+(fset 'ivy-omni-org--action
+      (ivy-omni-org--make-display-action 'switch-to-buffer))
 
 (defun ivy-omni-org--edit-entry-action (inp)
   "Edit an entry on INP."
@@ -196,10 +188,13 @@ _ARGS is a list of arguments as passed to `all-completions'."
       (bookmark-rename inp)
     (message "%s is not a bookmark" inp)))
 
-(ivy-add-actions 'ivy-omni-org
-                 '(("j" ivy-omni-org--other-window-action "other window")
-                   ("f" ivy-omni-org--other-frame-action "other frame")
-                   ("e" ivy-omni-org--edit-entry-action "edit bookmark")))
+(ivy-add-actions
+ 'ivy-omni-org
+ '(("j" (ivy-omni-org--make-display-action 'switch-to-buffer-other-window)
+    "other window")
+   ("f" (ivy-omni-org--make-display-action 'switch-to-buffer-other-frame)
+    "other frame")
+   ("e" ivy-omni-org--edit-entry-action "edit bookmark")))
 
 (provide 'ivy-omni-org)
 ;;; ivy-omni-org.el ends here
