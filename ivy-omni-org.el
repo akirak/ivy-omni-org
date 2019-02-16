@@ -179,6 +179,17 @@ _ARGS is a list of arguments as passed to `all-completions'."
     ((pred file-exists-p) (find-file-other-window inp))
     ((pred bookmark-get-bookmark) (bookmark-jump-other-window inp))))
 
+(defun ivy-omni-org--other-frame-action (inp)
+  "Open INP (file/buffer/bookmark) in other frame."
+  (pcase inp
+    ((pred get-buffer) (switch-to-buffer-other-frame inp))
+    ((pred file-exists-p) (find-file-other-frame inp))
+    ((pred bookmark-get-bookmark) (ivy-omni-org--bookmark-jump-other-frame inp))))
+
+(defun ivy-omni-org--bookmark-jump-other-frame (bookmark)
+  "Open BOOKMARK in other frame."
+  (bookmark-jump bookmark 'switch-to-buffer-other-frame))
+
 (defun ivy-omni-org--edit-entry-action (inp)
   "Edit an entry on INP."
   (if (ignore-errors (bookmark-get-bookmark inp))
@@ -187,6 +198,7 @@ _ARGS is a list of arguments as passed to `all-completions'."
 
 (ivy-add-actions 'ivy-omni-org
                  '(("j" ivy-omni-org--other-window-action "other window")
+                   ("f" ivy-omni-org--other-frame-action "other frame")
                    ("e" ivy-omni-org--edit-entry-action "edit bookmark")))
 
 (provide 'ivy-omni-org)
