@@ -74,6 +74,17 @@
   "Face for file names in the function.")
 
 ;;;; Commands
+(defmacro ivy-omni-org--make-display-action (display-func)
+  "Make an action on input using DISPLAY-FUNC."
+  `(lambda (inp)
+     (pcase inp
+       ((pred get-buffer)
+        (funcall ,display-func inp))
+       ((pred file-exists-p)
+        (ivy-omni-org--find-file-with-display-func inp ,display-func))
+       ((pred bookmark-get-bookmark)
+        (bookmark-jump inp ,display-func)))))
+
 ;;;###autoload
 (defun ivy-omni-org ()
   "Ivy interface to buffers, files, and bookmarks in Org."
@@ -81,7 +92,7 @@
   (ivy-read "Org: "
             #'ivy-omni-org--complete
             :caller #'ivy-omni-org
-            :action #'ivy-omni-org--action))
+            :action (ivy-omni-org--make-display-action 'switch-to-buffer)))
 
 (defun ivy-omni-org--prepend-entry-type (type entry)
   "Prepend TYPE indicator to an Ivy ENTRY."
@@ -166,21 +177,8 @@ _ARGS is a list of arguments as passed to `all-completions'."
             (mapcar #'car bookmarks))))
 
 (defun ivy-omni-org--find-file-with-display-func (file display-func)
+  "Display FILE using DISPLAY-FUNC."
   (funcall display-func (find-file-noselect file)))
-
-(defmacro ivy-omni-org--make-display-action (display-func)
-  "Make an action on input using DISPLAY-FUNC."
-  `(lambda (inp)
-     (pcase inp
-       ((pred get-buffer)
-        (funcall ,display-func inp))
-       ((pred file-exists-p)
-        (ivy-omni-org--find-file-with-display-func inp ,display-func))
-       ((pred bookmark-get-bookmark)
-        (bookmark-jump inp ,display-func)))))
-
-(fset 'ivy-omni-org--action
-      (ivy-omni-org--make-display-action 'switch-to-buffer))
 
 (defun ivy-omni-org--edit-entry-action (inp)
   "Edit an entry on INP."
