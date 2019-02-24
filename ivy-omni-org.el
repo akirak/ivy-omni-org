@@ -36,6 +36,7 @@
 (require 'bookmark)
 (require 'dash)
 (require 'cl-lib)
+(require 'seq)
 
 (defgroup ivy-omni-org nil
   "Ivy interface to Org buffers, files, and bookmarks."
