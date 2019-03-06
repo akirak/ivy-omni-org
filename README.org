@@ -12,6 +12,7 @@ Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to
 - ivy
 - dash
 ** Configuration
+See [[https://github.com/akirak/emacs.d/blob/master/setup/setup-ivy-omni-org.el][my config]] for a comprehensive example of configuration.
 *** File sources
 To configure the list of files, set =ivy-omni-org-file-sources= variable:
 
