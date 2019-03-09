@@ -189,9 +189,9 @@ _ARGS is a list of arguments as passed to `all-completions'."
 
 (ivy-add-actions
  'ivy-omni-org
- '(("j" (ivy-omni-org--make-display-action 'switch-to-buffer-other-window)
+ `(("j" ,(ivy-omni-org--make-display-action 'switch-to-buffer-other-window)
     "other window")
-   ("f" (ivy-omni-org--make-display-action 'switch-to-buffer-other-frame)
+   ("f" ,(ivy-omni-org--make-display-action 'switch-to-buffer-other-frame)
     "other frame")
    ("e" ivy-omni-org--edit-entry-action "edit bookmark")))
 
