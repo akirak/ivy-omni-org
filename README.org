@@ -1,5 +1,7 @@
-[[https://travis-ci.org/akirak/ivy-omni-org][https://travis-ci.org/akirak/ivy-omni-org.svg?branch=master]]
 * ivy-omni-org
+[[https://melpa.org/#/ivy-omni-org][file:https://melpa.org/packages/ivy-omni-org-badge.svg]]
+[[https://travis-ci.org/akirak/ivy-omni-org][https://travis-ci.org/akirak/ivy-omni-org.svg?branch=master]]
+
 This is an Emacs package which lets you access Org buffers, Org files,
 and Org bookmarks via a single Ivy interface. This is analogous to
 =ivy-switch-buffer= with virtual buffers enabled.
@@ -7,6 +9,17 @@ and Org bookmarks via a single Ivy interface. This is analogous to
 [[file:screenshots/ivy-omni-org-1.png]]
 
 Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to decorate buffer entries in this screenshot.
+** Table of contents
+:PROPERTIES:
+:TOC:      siblings
+:END:
+    -  [[#prerequisites][Prerequisites]]
+    -  [[#configuration][Configuration]]
+      -  [[#file-sources][File sources]]
+    -  [[#usage][Usage]]
+    -  [[#to-dos][To-Dos]]
+    -  [[#license][License]]
+
 ** Prerequisites
 - Emacs 25.1
 - ivy
@@ -35,3 +48,6 @@ Run =ivy-omni-org= command.
 - [ ] Add an action to create an entry or fire =org-capture=
 ** License
 GPL v3
+# Local Variables:
+# before-save-hook: org-make-toc
+# End:
