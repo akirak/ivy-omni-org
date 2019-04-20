@@ -1,4 +1,4 @@
-;;; ivy-omni-org.el --- One command to rule all Org buffers and files -*- lexical-binding: t -*-
+;;; ivy-omni-org.el --- One command to rule all of Org buffers, files, bookmarks, and agenda commands -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 Akira Komamura
 
