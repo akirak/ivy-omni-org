@@ -78,13 +78,10 @@
 (defmacro ivy-omni-org--make-display-action (display-func)
   "Make an action on input using DISPLAY-FUNC."
   `(lambda (inp)
-     (pcase inp
-       ((pred get-buffer)
-        (funcall ,display-func inp))
-       ((pred file-exists-p)
-        (ivy-omni-org--find-file-with-display-func inp ,display-func))
-       ((pred bookmark-get-bookmark)
-        (bookmark-jump inp ,display-func)))))
+     (cl-ecase (ivy-omni-org--candidate-type inp)
+       ('buffer (funcall ,display-func inp))
+       ('file (ivy-omni-org--find-file-with-display-func inp ,display-func))
+       ('bookmark (bookmark-jump inp ,display-func)))))
 
 ;;;###autoload
 (defun ivy-omni-org ()
@@ -123,18 +120,17 @@
 
 INP is an entry in the Ivy command."
   (condition-case _
-      (cond
-       ((get-buffer inp)
-        (ivy-omni-org--prepend-entry-type "buffer"
-          (funcall ivy-omni-org-buffer-display-transformer inp)))
-       ((file-exists-p inp)
-        (ivy-omni-org--prepend-entry-type "file"
-          (funcall ivy-omni-org-file-display-transformer inp)))
-       ;; Fallback
-       ((bookmark-get-bookmark inp)
-        (ivy-omni-org--prepend-entry-type "bookmark"
-          (funcall ivy-omni-org-bookmark-display-transformer inp)))
-       (t (error "Unexpected input to the display transformer: %s" inp)))
+      (cl-ecase (ivy-omni-org--candidate-type inp)
+        ('buffer
+         (ivy-omni-org--prepend-entry-type "buffer"
+           (funcall ivy-omni-org-buffer-display-transformer inp)))
+        ('file
+         (ivy-omni-org--prepend-entry-type "file"
+           (funcall ivy-omni-org-file-display-transformer inp)))
+        ;; Fallback
+        ('bookmark
+         (ivy-omni-org--prepend-entry-type "bookmark"
+           (funcall ivy-omni-org-bookmark-display-transformer inp))))
     (error inp)))
 
 (ivy-set-display-transformer
@@ -148,6 +144,14 @@ INP is an entry in the Ivy command."
                       (let ((filename (alist-get 'filename (cdr info))))
                         (string-match-p "\\.org\\'" filename)))
                     bookmark-alist))
+
+(defsubst ivy-omni-org--propertize-candidates (type items)
+  (-map #'(lambda (str)
+            (propertize str 'ivy-omni-org-type type))
+        items))
+
+(defsubst ivy-omni-org--candidate-type (inp)
+  (get-text-property 0 'ivy-omni-org-type inp))
 
 (defun ivy-omni-org--complete (&rest _args)
   "Generate completion candidates.
@@ -173,9 +177,15 @@ _ARGS is a list of arguments as passed to `all-completions'."
                  :test #'file-equal-p))
          (unloaded-files (seq-difference files loaded-files #'file-equal-p))
          (bookmarks (ivy-omni-org--bookmarks)))
-    (append bufnames
-            unloaded-files
-            (mapcar #'car bookmarks))))
+    (append (ivy-omni-org--propertize-candidates
+             'buffer
+             bufnames)
+            (ivy-omni-org--propertize-candidates
+             'file
+             unloaded-files)
+            (ivy-omni-org--propertize-candidates
+             'bookmark
+             (mapcar #'car bookmarks)))))
 
 (defun ivy-omni-org--find-file-with-display-func (file display-func)
   "Display FILE using DISPLAY-FUNC."
