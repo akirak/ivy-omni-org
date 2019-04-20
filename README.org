@@ -3,7 +3,7 @@
 [[https://travis-ci.org/akirak/ivy-omni-org][https://travis-ci.org/akirak/ivy-omni-org.svg?branch=master]]
 
 This is an Emacs package which lets you access Org buffers, Org files,
-and Org bookmarks via a single Ivy interface. This is analogous to
+ Org bookmarks, and custom org-agenda commands via a single Ivy interface. This is analogous to
 =ivy-switch-buffer= with virtual buffers enabled.
 
 [[file:screenshots/ivy-omni-org-1.png]]
@@ -15,6 +15,7 @@ Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to
 :END:
     -  [[#prerequisites][Prerequisites]]
     -  [[#configuration][Configuration]]
+      -  [[#entry-types][Entry types]]
       -  [[#file-sources][File sources]]
     -  [[#usage][Usage]]
     -  [[#to-dos][To-Dos]]
@@ -26,6 +27,9 @@ Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to
 - dash
 ** Configuration
 See [[https://github.com/akirak/emacs.d/blob/master/setup/setup-ivy-omni-org.el][my config]] for a comprehensive example of configuration.
+*** Entry types
+To configure the types (and the order) of contents displayed in =ivy-omni-org= command, customize =ivy-omni-org-content-types= variable.
+Its default value is ='(buffers files agenda-commands bookmarks)=.
 *** File sources
 To configure the list of files, set =ivy-omni-org-file-sources= variable:
 
