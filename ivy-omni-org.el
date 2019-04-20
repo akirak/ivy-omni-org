@@ -153,7 +153,7 @@
   "The default display transformer for `ivy-omni-org'.
 
 INP is an entry in the Ivy command."
-  (condition-case _
+  (condition-case-unless-debug _
       (cl-ecase (ivy-omni-org--candidate-type inp)
         ('buffer
          (ivy-omni-org--prepend-entry-type "buffer"
