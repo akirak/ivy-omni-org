@@ -43,6 +43,11 @@
   :group 'org
   :group 'ivy)
 
+(declare-function 'org-contextualize-keys "org")
+(autoload 'org-contextualize-keys "org")
+(defvar org-agenda-custom-commands)
+(defvar org-agenda-custom-commands-contexts)
+
 ;;;; Custom variables
 (defcustom ivy-omni-org-file-sources nil
   "List of sources producing a list of Org files."
@@ -90,6 +95,17 @@
 (defface ivy-omni-org-custom-agenda-desc
   '((default))
   "Face for the description of each custom agenda command.")
+
+;;;; Macros and utility functions
+(defsubst ivy-omni-org--propertize-candidates (type items)
+  "Add text property for TYPE to ITEMS."
+  (-map #'(lambda (str)
+            (propertize str 'ivy-omni-org-type type))
+        items))
+
+(defsubst ivy-omni-org--candidate-type (inp)
+  "Extract the candidate type from the text property of INP."
+  (get-text-property 0 'ivy-omni-org-type inp))
 
 ;;;; Commands
 (defmacro ivy-omni-org--make-display-action (display-func)
@@ -181,16 +197,6 @@ INP is an entry in the Ivy command."
                         (string-match-p "\\.org\\'" filename)))
                     bookmark-alist))
 
-(defsubst ivy-omni-org--propertize-candidates (type items)
-  "Add text property for TYPE to ITEMS."
-  (-map #'(lambda (str)
-            (propertize str 'ivy-omni-org-type type))
-        items))
-
-(defsubst ivy-omni-org--candidate-type (inp)
-  "Extract the candidate type from the text property of INP."
-  (get-text-property 0 'ivy-omni-org-type inp))
-
 (defun ivy-omni-org--agenda-key (inp)
   "Extract the agenda key from INP."
   (if (string-match (rx bol "@" (group (+ (not space)))) inp)
@@ -228,6 +234,7 @@ _ARGS is a list of arguments as passed to `all-completions'."
          (bookmarks (when (cl-member 'bookmarks ivy-omni-org-content-types)
                       (ivy-omni-org--bookmarks)))
          (agenda-commands (when (cl-member 'agenda-commands ivy-omni-org-content-types)
+                            (require 'org-agenda)
                             (-map (lambda (entry)
                                     (ivy-omni-org--make-agenda-entry (car entry)))
                                   (org-contextualize-keys
