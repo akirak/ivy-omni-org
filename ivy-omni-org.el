@@ -156,9 +156,9 @@
                         eol)
                     entry)
       (concat (propertize (match-string 1 entry)
-                          'face 'ivy-omni-org-agenda-key)
+                          'face 'ivy-omni-org-custom-agenda-key)
               (propertize (match-string 2 entry)
-                          'face 'ivy-omni-org-agenda-desc))
+                          'face 'ivy-omni-org-custom-agenda-desc))
     (condition-case-unless-debug err
         (error "Failed to transform agenda entry %s" entry)
       (error (progn
