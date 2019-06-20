@@ -89,7 +89,7 @@
   "Face for file names in the function.")
 
 (defface ivy-omni-org-custom-agenda-key
-  '((default))
+  '((default :inherit 'font-lock-keyword-face))
   "Face for the key of each custom agenda command.")
 
 (defface ivy-omni-org-custom-agenda-desc
