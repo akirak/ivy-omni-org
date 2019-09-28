@@ -84,6 +84,14 @@
   '((default :inherit 'ivy-virtual))
   "Face for file names in the function.")
 
+(defface ivy-omni-org-buffer-name
+  '((default :inherit 'font-lock-type-face))
+  "Face for file names in the function.")
+
+(defface ivy-omni-org-buffer-file-name
+  '((default :inherit 'ivy-virtual))
+  "Face for file names in the function.")
+
 (defface ivy-omni-org-bookmark-name
   '((default :inherit 'font-lock-string-face))
   "Face for file names in the function.")
@@ -135,7 +143,13 @@
 
 (defun ivy-omni-org-default-buffer-transformer (buf)
   "Default display transformer for BUF."
-  (format "%-18s  %s" buf (or (buffer-file-name buf) nil)))
+  (format "%-18s  %s"
+          (propertize buf 'face 'ivy-omni-org-buffer-name)
+          (let ((file-name (buffer-file-name (get-buffer buf))))
+            (if file-name
+                (propertize (abbreviate-file-name file-name)
+                            'face 'ivy-omni-org-buffer-file-name)
+              ""))))
 
 (defun ivy-omni-org-default-file-transformer (file)
   "Default display transformer for FILE."
