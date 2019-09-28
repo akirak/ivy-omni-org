@@ -80,9 +80,14 @@
   :group 'ivy-omni-org)
 
 ;;;; Faces
+(defgroup ivy-omni-org-faces nil
+  "Face for ivy-omni-org."
+  :group 'ivy-omni-org)
+
 (defface ivy-omni-org-file-name
   '((default :inherit 'ivy-virtual))
-  "Face for file names in the function.")
+  "Face for file names in the function."
+  :group 'ivy-omni-org-faces)
 
 (defface ivy-omni-org-buffer-name
   '((default :inherit 'font-lock-type-face))
@@ -94,15 +99,18 @@
 
 (defface ivy-omni-org-bookmark-name
   '((default :inherit 'font-lock-string-face))
-  "Face for file names in the function.")
+  "Face for file names in the function."
+  :group 'ivy-omni-org-faces)
 
 (defface ivy-omni-org-custom-agenda-key
   '((default :inherit 'font-lock-keyword-face))
-  "Face for the key of each custom agenda command.")
+  "Face for the key of each custom agenda command."
+  :group 'ivy-omni-org-faces)
 
 (defface ivy-omni-org-custom-agenda-desc
   '((default))
-  "Face for the description of each custom agenda command.")
+  "Face for the description of each custom agenda command."
+  :group 'ivy-omni-org-faces)
 
 ;;;; Macros and utility functions
 (defsubst ivy-omni-org--propertize-candidates (type items)
