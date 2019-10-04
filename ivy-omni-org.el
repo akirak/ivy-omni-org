@@ -79,6 +79,29 @@
                          (const bookmarks)))
   :group 'ivy-omni-org)
 
+(defcustom ivy-omni-org-custom-content-types
+  (when (featurep 'org-ql-view)
+    '((org-ql-views
+       :name "org-ql"
+       :items (lambda () (mapcar #'car org-ql-views))
+       :display (lambda (inp _display) (org-ql-view inp)))))
+  "User-defined content types."
+  :type '(repeat
+          (list (symbol :tag "Symbol to identify the type")
+                (plist :inline t
+                       :options
+                       (((const :tag "Function to generate items" :items)
+                         function)
+                        ((const :tag "Tag prepended to each entry" :name)
+                         string)
+                        ((const :tag "Display action" :display)
+                         function)
+                        ((const :tag "Display transformer" :transformer)
+                         function)
+                        ((const :tag "Edit function" :edit)
+                         function)))))
+  :group 'ivy-omni-org)
+
 ;;;; Faces
 (defgroup ivy-omni-org-faces nil
   "Face for ivy-omni-org."
@@ -127,11 +150,15 @@
 (defmacro ivy-omni-org--make-display-action (display-func)
   "Make an action on input using DISPLAY-FUNC."
   `(lambda (inp)
-     (cl-ecase (ivy-omni-org--candidate-type inp)
+     (pcase (ivy-omni-org--candidate-type inp)
        ('buffer (funcall ,display-func inp))
        ('file (ivy-omni-org--find-file-with-display-func inp ,display-func))
        ('bookmark (bookmark-jump inp ,display-func))
-       ('agenda-command (org-agenda nil (ivy-omni-org--agenda-key inp))))))
+       ('agenda-command (org-agenda nil (ivy-omni-org--agenda-key inp)))
+       (key (if-let ((custom (alist-get key ivy-omni-org-custom-content-types))
+                     (display (plist-get custom :display)))
+                (funcall display inp ,display-func)
+              (error "Undefined entry type %s or no :display in %s" key custom))))))
 
 ;;;###autoload
 (defun ivy-omni-org ()
@@ -192,7 +219,7 @@
 
 INP is an entry in the Ivy command."
   (condition-case-unless-debug _
-      (cl-ecase (ivy-omni-org--candidate-type inp)
+      (pcase (ivy-omni-org--candidate-type inp)
         ('buffer
          (ivy-omni-org--prepend-entry-type "buffer"
            (funcall ivy-omni-org-buffer-display-transformer inp)))
@@ -204,7 +231,18 @@ INP is an entry in the Ivy command."
            (ivy-omni-org-agenda-command-transformer inp)))
         ('bookmark
          (ivy-omni-org--prepend-entry-type "bookmark"
-           (funcall ivy-omni-org-bookmark-display-transformer inp))))
+           (funcall ivy-omni-org-bookmark-display-transformer inp)))
+        (other
+         (let* ((custom (alist-get other ivy-omni-org-custom-content-types))
+                (name (plist-get custom :name))
+                (transformer (plist-get custom :transformer)))
+           (if custom
+               (ivy-omni-org--prepend-entry-type
+                   (or name (symbol-name other))
+                 (if transformer
+                     (funcall transformer inp)
+                   inp))
+             (error "Undefined content type %s" other)))))
     (error inp)))
 
 (ivy-set-display-transformer
@@ -263,7 +301,7 @@ _ARGS is a list of arguments as passed to `all-completions'."
                                    org-agenda-custom-commands
                                    org-agenda-custom-commands-contexts)))))
     (cl-loop for type in ivy-omni-org-content-types
-             append (cl-ecase type
+             append (pcase type
                       ('buffers
                        (ivy-omni-org--propertize-candidates
                         'buffer
@@ -279,7 +317,13 @@ _ARGS is a list of arguments as passed to `all-completions'."
                       ('bookmarks
                        (ivy-omni-org--propertize-candidates
                         'bookmark
-                        (mapcar #'car bookmarks)))))))
+                        (mapcar #'car bookmarks)))
+                      (other
+                       (if-let ((custom (alist-get other ivy-omni-org-custom-content-types))
+                                (generator (plist-get custom :items)))
+                           (ivy-omni-org--propertize-candidates
+                            other (funcall generator))
+                         (error "Undefined type of missing :items: %s" other)))))))
 
 (defun ivy-omni-org--find-file-with-display-func (file display-func)
   "Display FILE using DISPLAY-FUNC."
