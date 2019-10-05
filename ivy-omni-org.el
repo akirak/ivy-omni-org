@@ -73,7 +73,7 @@
 (defcustom ivy-omni-org-custom-content-types
   '((org-ql-views
      :name "org-ql"
-     :when (lambda () (requirep 'org-ql-view nil t))
+     :when (lambda () (require 'org-ql-view nil t))
      :items (lambda () (mapcar #'car org-ql-views))
      :display (lambda (inp _display) (org-ql-view inp))))
   "User-defined content types.
