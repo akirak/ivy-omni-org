@@ -82,7 +82,7 @@
 ;;;; Faces
 (defgroup ivy-omni-org-faces nil
   "Face for ivy-omni-org."
-  :group 'ivy-omni-org)
+  :group 'ivy-omni-org-faces)
 
 (defface ivy-omni-org-file-name
   '((default :inherit 'ivy-virtual))
@@ -91,11 +91,13 @@
 
 (defface ivy-omni-org-buffer-name
   '((default :inherit 'font-lock-type-face))
-  "Face for file names in the function.")
+  "Face for file names in the function."
+  :group 'ivy-omni-org-faces)
 
 (defface ivy-omni-org-buffer-file-name
   '((default :inherit 'ivy-virtual))
-  "Face for file names in the function.")
+  "Face for file names in the function."
+  :group 'ivy-omni-org-faces)
 
 (defface ivy-omni-org-bookmark-name
   '((default :inherit 'font-lock-string-face))
