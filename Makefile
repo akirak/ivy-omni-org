@@ -5,7 +5,7 @@ PACKAGE_BASENAME      := ivy-omni-org
 
 # override defaults
 PACKAGE_ARCHIVES      := gnu melpa
-PACKAGE_TEST_DEPS     := dash let-alist
+PACKAGE_TEST_DEPS     := let-alist dash
 PACKAGE_TEST_ARCHIVES := gnu melpa
 
 .DEFAULT_GOAL: help
