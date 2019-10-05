@@ -80,17 +80,19 @@
   :group 'ivy-omni-org)
 
 (defcustom ivy-omni-org-custom-content-types
-  (when (featurep 'org-ql-view)
-    '((org-ql-views
-       :name "org-ql"
-       :items (lambda () (mapcar #'car org-ql-views))
-       :display (lambda (inp _display) (org-ql-view inp)))))
+  '((org-ql-views
+     :name "org-ql"
+     :when (lambda () (requirep 'org-ql-view nil t))
+     :items (lambda () (mapcar #'car org-ql-views))
+     :display (lambda (inp _display) (org-ql-view inp))))
   "User-defined content types."
   :type '(repeat
           (list (symbol :tag "Symbol to identify the type")
                 (plist :inline t
                        :options
                        (((const :tag "Function to generate items" :items)
+                         function)
+                        ((const :tag "Function to determine whether to display the contents" :when)
                          function)
                         ((const :tag "Tag prepended to each entry" :name)
                          string)
