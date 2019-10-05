@@ -326,9 +326,11 @@ _ARGS is a list of arguments as passed to `all-completions'."
                         (mapcar #'car bookmarks)))
                       (other
                        (if-let ((custom (alist-get other ivy-omni-org-custom-content-types))
-                                (generator (plist-get custom :items)))
-                           (ivy-omni-org--propertize-candidates
-                            other (funcall generator))
+                                (generator (plist-get custom :items))
+                                (when (plist-get custom :when)))
+                           (when (and when (funcall when))
+                             (ivy-omni-org--propertize-candidates
+                              other (funcall generator)))
                          (error "Undefined type of missing :items: %s" other)))))))
 
 (defun ivy-omni-org--find-file-with-display-func (file display-func)
