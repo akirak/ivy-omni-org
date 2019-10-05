@@ -1,6 +1,5 @@
 # symlink'd to parent directory (emake.el)
 /emake.el
-/emake.mk
 
 # EMAKE_WORKDIR
 /.emake/

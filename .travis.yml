@@ -1,16 +1,30 @@
 language: generic
 sudo: required
-dist: trusty
+
+addons:
+  apt:
+    packages:
+    - gnutls-bin
+    - sharutils
+    - gnupg2
+    - dirmngr
+
 os:
 - linux
 - osx
+
 cache:
 - directories:
-  - "$HOME/emacs"
+  - $HOME/emacs
+  - $HOME/.cache/pip
+  - $HOME/.emacs.d
+  - $TRAVIS_BUILD_DIR/.cask
+
 matrix:
   fast_finish: true
   allow_failures:
   - env: EMACS_VERSION=snapshot
+
 env:
   global:
   - EMAKE_SHA1=2dec3626e073c3b4aa88fbedd7ad5d27e530f470
@@ -20,11 +34,30 @@ env:
   - EMACS_VERSION=25.3
   - EMACS_VERSION=26.1
   - EMACS_VERSION=snapshot
+
 before_install:
-- wget "https://raw.githubusercontent.com/vermiculus/emake.el/${EMAKE_SHA1}/emake.mk"
 - make setup
+- emacs -Q --batch
+- mkdir -p $HOME/.emacs.d/elpa/gnupg || true
+- chmod 700 $HOME/.emacs.d/elpa/gnupg
+- |
+  ( for i in 1 2 3 ; do
+        GPG=gpg
+        if which gpg2 ; then GPG=gpg2 ; fi
+        $GPG --keyserver hkp://ipv4.pool.sks-keyservers.net --homedir $HOME/.emacs.d/elpa/gnupg --recv-keys 066DAFCB81E42C40
+        if $GPG -q --homedir $HOME/.emacs.d/elpa/gnupg -k | grep 81E42C40 ; then
+          exit 0
+        fi
+        sleep 5
+    done
+    exit 1
+  )
+- rsync -azSH $HOME/.emacs.d/elpa/gnupg .emake/elpa
+- rsync -azSH $HOME/.emacs.d/elpa/gnupg .emake/elpa-test
+
 install:
 - make install
+
 script:
 # test uncompiled
 # - make test-ert

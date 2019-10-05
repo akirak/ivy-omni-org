@@ -10,9 +10,6 @@ PACKAGE_TEST_ARCHIVES := gnu melpa
 
 .DEFAULT_GOAL: help
 
-emake.mk:                       ## download the emake Makefile
-	curl -O 'https://raw.githubusercontent.com/vermiculus/emake.el/$(EMAKE_SHA1)/emake.mk'
-
 clean:
 	rm -rf $(EMAKE_WORKDIR)
 	rm -f $(PACKAGE_LISP:.el=.elc)
