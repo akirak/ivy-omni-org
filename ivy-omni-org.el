@@ -72,7 +72,7 @@
 
 (defcustom ivy-omni-org-custom-content-types
   '((org-ql-views
-     :name "org-ql"
+     :name "ql-view"
      :when (lambda () (require 'org-ql-view nil t))
      :items (lambda () (mapcar #'car org-ql-views))
      :display (lambda (inp _display) (org-ql-view inp))))
