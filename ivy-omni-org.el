@@ -70,15 +70,6 @@
   :type 'function
   :group 'ivy-omni-org)
 
-(defcustom ivy-omni-org-content-types
-  '(buffers files agenda-commands bookmarks)
-  "Permutation of types to include in `ivy-omni-org'."
-  :type '(repeat (choice (const buffers)
-                         (const files)
-                         (const agenda-commands)
-                         (const bookmarks)))
-  :group 'ivy-omni-org)
-
 (defcustom ivy-omni-org-custom-content-types
   '((org-ql-views
      :name "org-ql"
@@ -102,6 +93,19 @@
                          function)
                         ((const :tag "Edit function" :edit)
                          function)))))
+  :group 'ivy-omni-org)
+
+(defcustom ivy-omni-org-content-types
+  `(buffers files agenda-commands bookmarks
+            ,@(mapcar #'car ivy-omni-org-custom-content-types))
+  "Permutation of types to include in `ivy-omni-org'."
+  :type `(repeat (choice (const buffers)
+                         (const files)
+                         (const agenda-commands)
+                         (const bookmarks)
+                         ,@(mapcar (lambda (cell)
+                                     (list 'const (car cell)))
+                                   ivy-omni-org-custom-content-types)))
   :group 'ivy-omni-org)
 
 ;;;; Faces
