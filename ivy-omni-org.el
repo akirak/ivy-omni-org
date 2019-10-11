@@ -216,7 +216,8 @@ INP is an entry in the Ivy command."
   (bookmark-maybe-load-default-file)
   (cl-remove-if-not (lambda (info)
                       (let ((filename (alist-get 'filename (cdr info))))
-                        (string-match-p "\\.org\\'" filename)))
+                        (and filename
+                             (string-match-p "\\.org\\'" filename))))
                     bookmark-alist))
 
 (defun ivy-omni-org--agenda-key (inp)
