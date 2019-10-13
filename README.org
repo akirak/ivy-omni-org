@@ -44,6 +44,10 @@ If you are using [[https://github.com/akirak/org-starter][org-starter]] package,
 #+begin_src emacs-lisp
   (setq ivy-omni-org-file-sources '(org-starter-known-files))
 #+end_src
+*** Custom entry types and reordering the sections
+By customizing =ivy-omni-org-custom-content-types=, you can display user-defined contents in =ivy-omni-org=.
+
+An example integration is with [[https://github.com/alphapapa/org-ql][org-ql]], which is included in the package out of the box. That is, it lists =org-ql-views= defined within the package.
 ** Usage
 Run =ivy-omni-org= command.
 ** To-Dos
