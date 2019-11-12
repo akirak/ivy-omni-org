@@ -190,6 +190,9 @@ The plist in each item consists of the following properties:
                 (funcall display inp ,display-func)
               (error "Undefined entry type %s or no :display in %s" key custom))))))
 
+(defvar ivy-omni-org-history nil
+  "History for `ivy-omni-org'.")
+
 ;;;###autoload
 (defun ivy-omni-org ()
   "Ivy interface to buffers, files, and bookmarks in Org."
@@ -197,6 +200,7 @@ The plist in each item consists of the following properties:
   (ivy-read "Org: "
             #'ivy-omni-org--complete
             :caller #'ivy-omni-org
+            :history 'ivy-omni-org-history
             :action (ivy-omni-org--make-display-action 'switch-to-buffer)))
 
 (defun ivy-omni-org--prepend-entry-type (type entry)
