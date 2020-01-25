@@ -60,7 +60,7 @@ Run =ivy-omni-org= command.
 ** Change log
 *** 0.2.2 (2020-01-25)
 - *Add* a command =ivy-omni-org-bookmarks= which displays only a list of bookmarks.
-- *Add* a custom variable =ivy-omni-org-prepend-entry-type,= which allows you to not prepending an entry type to each entry.
+- *Add* a custom variable =ivy-omni-org-prepend-entry-type=, which allows you to not prepending an entry type to each entry.
 - *Add* an argument to =ivy-omni-org= function =:types=, which lets you limit only certain types of entries.
   - When a single type is displayed, the entry type is not prepended.
 ** License
