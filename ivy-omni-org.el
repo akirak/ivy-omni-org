@@ -194,15 +194,23 @@ The plist in each item consists of the following properties:
 (defvar ivy-omni-org-history nil
   "History for `ivy-omni-org'.")
 
+(defvar ivy-omni-org-temporary-entry-types nil)
+
 ;;;###autoload
-(defun ivy-omni-org ()
-  "Ivy interface to buffers, files, and bookmarks in Org."
+(cl-defun ivy-omni-org (&key types)
+  "Ivy interface to buffers, files, and bookmarks in Org.
+
+When TYPES is a list of symbols, this function limits the content
+types to it."
   (interactive)
-  (ivy-read "Org: "
-            #'ivy-omni-org--complete
-            :caller #'ivy-omni-org
-            :history 'ivy-omni-org-history
-            :action (ivy-omni-org--make-display-action 'switch-to-buffer)))
+  (let ((ivy-omni-org-temporary-entry-types types))
+    (ivy-read (if types
+                  (format "Org [%s]: " (mapconcat #'symbol-name types " "))
+                "Org: ")
+              #'ivy-omni-org--complete
+              :caller #'ivy-omni-org
+              :history 'ivy-omni-org-history
+              :action (ivy-omni-org--make-display-action 'switch-to-buffer))))
 
 (defun ivy-omni-org--prepend-entry-type (type entry)
   "Prepend TYPE indicator to an Ivy ENTRY."
@@ -306,15 +314,21 @@ INP is an entry in the Ivy command."
 (defun ivy-omni-org--complete (&rest _args)
   "Generate completion candidates.
 
-_ARGS is a list of arguments as passed to `all-completions'."
-  (let* ((bufs (cl-remove-if-not
-                (lambda (buf)
-                  (with-current-buffer buf
-                    (derived-mode-p 'org-mode)))
-                (mapcar #'get-buffer (internal-complete-buffer "" nil t))))
+_ARGS is a list of arguments as passed to `all-completions'.
+
+To display entries of only certain types, set
+`ivy-omni-org-temporary-entry-types' to non-nil."
+  (let* ((types (or ivy-omni-org-temporary-entry-types ivy-omni-org-content-types))
+         (bufs (when (memq 'buffers types)
+                 (cl-remove-if-not
+                  (lambda (buf)
+                    (with-current-buffer buf
+                      (derived-mode-p 'org-mode)))
+                  (mapcar #'get-buffer (internal-complete-buffer "" nil t)))))
          (bufnames (mapcar #'buffer-name bufs))
-         (loaded-files (delq nil (mapcar #'buffer-file-name bufs)))
-         (files (when (cl-member 'files ivy-omni-org-content-types)
+         (loaded-files (when (memq 'files types)
+                         (delq nil (mapcar #'buffer-file-name bufs))))
+         (files (when (memq 'files types)
                   (cl-delete-duplicates
                    (-flatten (mapcar (lambda (source)
                                        (cl-etypecase nil
@@ -326,17 +340,18 @@ _ARGS is a list of arguments as passed to `all-completions'."
                                                    (symbol-value source))))))
                                      ivy-omni-org-file-sources))
                    :test #'file-equal-p)))
-         (unloaded-files (seq-difference files loaded-files #'file-equal-p))
-         (bookmarks (when (cl-member 'bookmarks ivy-omni-org-content-types)
+         (unloaded-files (when (memq 'files types)
+                           (seq-difference files loaded-files #'file-equal-p)))
+         (bookmarks (when (memq 'bookmarks types)
                       (ivy-omni-org--bookmarks)))
-         (agenda-commands (when (cl-member 'agenda-commands ivy-omni-org-content-types)
+         (agenda-commands (when (memq 'agenda-commands types)
                             (require 'org-agenda)
                             (-map (lambda (entry)
                                     (ivy-omni-org--make-agenda-entry (car entry)))
                                   (org-contextualize-keys
                                    org-agenda-custom-commands
                                    org-agenda-custom-commands-contexts)))))
-    (cl-loop for type in ivy-omni-org-content-types
+    (cl-loop for type in types
              append (pcase type
                       ('buffers
                        (ivy-omni-org--propertize-candidates
