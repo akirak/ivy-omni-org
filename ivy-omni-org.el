@@ -208,7 +208,10 @@ The plist in each item consists of the following properties:
 When TYPES is a list of symbols, this function limits the content
 types to it."
   (interactive)
-  (let ((ivy-omni-org-temporary-entry-types types))
+  (let ((ivy-omni-org-temporary-entry-types types)
+        (ivy-omni-org-prepend-entry-type (if (= 1 (length types))
+                                 nil
+                               ivy-omni-org-prepend-entry-type)))
     (ivy-read (if types
                   (format "Org [%s]: " (mapconcat #'symbol-name types " "))
                 "Org: ")
