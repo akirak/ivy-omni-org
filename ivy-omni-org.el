@@ -268,30 +268,27 @@ types to it."
 
 INP is an entry in the Ivy command."
   (condition-case-unless-debug _
-      (pcase (ivy-omni-org--candidate-type inp)
-        ('buffer
-         (ivy-omni-org--prepend-entry-type "buffer"
-           (funcall ivy-omni-org-buffer-display-transformer inp)))
-        ('file
-         (ivy-omni-org--prepend-entry-type "file"
-           (funcall ivy-omni-org-file-display-transformer inp)))
-        ('agenda-command
-         (ivy-omni-org--prepend-entry-type "agenda"
-           (ivy-omni-org-agenda-command-transformer inp)))
-        ('bookmark
-         (ivy-omni-org--prepend-entry-type "bookmark"
-           (funcall ivy-omni-org-bookmark-display-transformer inp)))
-        (other
-         (let* ((custom (alist-get other ivy-omni-org-custom-content-types))
-                (name (plist-get custom :name))
-                (transformer (plist-get custom :transformer)))
-           (if custom
-               (ivy-omni-org--prepend-entry-type
-                   (or name (symbol-name other))
-                 (if transformer
-                     (funcall transformer inp)
-                   inp))
-             (error "Undefined content type %s" other)))))
+      (let* ((type (ivy-omni-org--candidate-type inp))
+             (custom (alist-get type ivy-omni-org-custom-content-types))
+             (type-str (pcase type
+                         ('buffer "buffer")
+                         ('file "file")
+                         ('agenda-command "agenda")
+                         ('bookmark "bookmark")
+                         (other (or (plist-get custom :name)
+                                    (symbol-name custom)))))
+             (transformer (pcase type
+                            ('buffer ivy-omni-org-buffer-display-transformer)
+                            ('file ivy-omni-org-file-display-transformer)
+                            ('agenda-command #'ivy-omni-org-agenda-command-transformer)
+                            ('bookmark ivy-omni-org-bookmark-display-transformer)
+                            (other (if custom
+                                       (plist-get custom :transformer)
+                                     (error "Undefined content type %s" other)))))
+             (out (if transformer
+                      (funcall transformer inp)
+                    inp)))
+        (ivy-omni-org--prepend-entry-type type-str out))
     (error inp)))
 
 (ivy-set-display-transformer
