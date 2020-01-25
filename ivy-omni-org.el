@@ -280,21 +280,21 @@ INP is an entry in the Ivy command."
   (condition-case-unless-debug _
       (let* ((type (ivy-omni-org--candidate-type inp))
              (custom (alist-get type ivy-omni-org-custom-content-types))
-             (type-str (pcase type
-                         ('buffer "buffer")
-                         ('file "file")
-                         ('agenda-command "agenda")
-                         ('bookmark "bookmark")
-                         (other (or (plist-get custom :name)
-                                    (symbol-name custom)))))
-             (transformer (pcase type
-                            ('buffer ivy-omni-org-buffer-display-transformer)
-                            ('file ivy-omni-org-file-display-transformer)
-                            ('agenda-command #'ivy-omni-org-agenda-command-transformer)
-                            ('bookmark ivy-omni-org-bookmark-display-transformer)
-                            (other (if custom
-                                       (plist-get custom :transformer)
-                                     (error "Undefined content type %s" other)))))
+             (type-str (cl-case type
+                         (buffer "buffer")
+                         (file "file")
+                         (agenda-command "agenda")
+                         (bookmark "bookmark")
+                         (t (or (plist-get custom :name)
+                                (symbol-name custom)))))
+             (transformer (cl-case type
+                            (buffer ivy-omni-org-buffer-display-transformer)
+                            (file ivy-omni-org-file-display-transformer)
+                            (agenda-command #'ivy-omni-org-agenda-command-transformer)
+                            (bookmark ivy-omni-org-bookmark-display-transformer)
+                            (t (if custom
+                                   (plist-get custom :transformer)
+                                 (error "Undefined content type %s" type)))))
              (out (if transformer
                       (funcall transformer inp)
                     inp)))
