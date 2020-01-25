@@ -212,6 +212,12 @@ types to it."
               :history 'ivy-omni-org-history
               :action (ivy-omni-org--make-display-action 'switch-to-buffer))))
 
+;;;###autoload
+(defun ivy-omni-org-bookmarks ()
+  "Display a list of bookmarks."
+  (interactive)
+  (ivy-omni-org :types '(bookmarks)))
+
 (defun ivy-omni-org--prepend-entry-type (type entry)
   "Prepend TYPE indicator to an Ivy ENTRY."
   (declare (indent 1))
