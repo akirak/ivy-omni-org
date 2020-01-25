@@ -21,7 +21,7 @@ Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to
 -  [[#usage][Usage]]
 -  [[#to-dos][To-Dos]]
 -  [[#change-log][Change log]]
-  -  [[#022-2020-01-25-sat][0.2.2 [2020-01-25 Sat]​]]
+  -  [[#022-2020-01-25][0.2.2 (2020-01-25)]]
 -  [[#license][License]]
 
 ** Prerequisites
@@ -58,7 +58,7 @@ Run =ivy-omni-org= command.
 - [ ] Add an action to kill the selected buffer
 - [ ] Add an action to create an entry or fire =org-capture=
 ** Change log
-*** 0.2.2 [2020-01-25 Sat]
+*** 0.2.2 (2020-01-25)
 - *Add* a command =ivy-omni-org-bookmarks= which displays only a list of bookmarks.
 - *Add* a custom variable =ivy-omni-org-prepend-entry-type,= which allows you to not prepending an entry type to each entry.
 - *Add* an argument to =ivy-omni-org= function =:types=, which lets you limit only certain types of entries.
