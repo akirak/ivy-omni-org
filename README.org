@@ -13,13 +13,14 @@ Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to
 :PROPERTIES:
 :TOC:      siblings
 :END:
-    -  [[#prerequisites][Prerequisites]]
-    -  [[#configuration][Configuration]]
-      -  [[#entry-types][Entry types]]
-      -  [[#file-sources][File sources]]
-    -  [[#usage][Usage]]
-    -  [[#to-dos][To-Dos]]
-    -  [[#license][License]]
+-  [[#prerequisites][Prerequisites]]
+-  [[#configuration][Configuration]]
+  -  [[#entry-types][Entry types]]
+  -  [[#file-sources][File sources]]
+  -  [[#custom-entry-types-and-reordering-the-sections][Custom entry types and reordering the sections]]
+-  [[#usage][Usage]]
+-  [[#to-dos][To-Dos]]
+-  [[#license][License]]
 
 ** Prerequisites
 - Emacs 25.1
