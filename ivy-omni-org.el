@@ -131,6 +131,11 @@ The plist in each item consists of the following properties:
                                    ivy-omni-org-custom-content-types)))
   :group 'ivy-omni-org)
 
+(defcustom ivy-omni-org-prepend-entry-type t
+  "When non-nil, prepend the entry type to each Ivy entry."
+  :type 'boolean
+  :group 'ivy-omni-org)
+
 ;;;; Faces
 (defgroup ivy-omni-org-faces nil
   "Face for ivy-omni-org."
@@ -221,9 +226,11 @@ types to it."
 (defun ivy-omni-org--prepend-entry-type (type entry)
   "Prepend TYPE indicator to an Ivy ENTRY."
   (declare (indent 1))
-  (concat (format "%-8s "
-                  (propertize type 'face 'font-lock-comment-face))
-          entry))
+  (if ivy-omni-org-prepend-entry-type
+      (concat (format "%-8s "
+                      (propertize type 'face 'font-lock-comment-face))
+              entry)
+    entry))
 
 (defun ivy-omni-org-default-buffer-transformer (buf)
   "Default display transformer for BUF."
