@@ -1,6 +1,6 @@
 * ivy-omni-org
 [[https://melpa.org/#/ivy-omni-org][file:https://melpa.org/packages/ivy-omni-org-badge.svg]]
-[[https://travis-ci.org/akirak/ivy-omni-org][https://travis-ci.org/akirak/ivy-omni-org.svg?branch=master]]
+[[https://github.com/akirak/ivy-omni-org/workflows/lint/badge.svg?branch=master]]
 
 This is an Emacs package which lets you access Org buffers, Org files,
  Org bookmarks, and custom org-agenda commands via a single Ivy interface. This is analogous to
@@ -13,13 +13,14 @@ Note: [[https://github.com/casouri/ivy-filthy-rich][ivy-filthy-rich]] is used to
 :PROPERTIES:
 :TOC:      siblings
 :END:
-    -  [[#prerequisites][Prerequisites]]
-    -  [[#configuration][Configuration]]
-      -  [[#entry-types][Entry types]]
-      -  [[#file-sources][File sources]]
-    -  [[#usage][Usage]]
-    -  [[#to-dos][To-Dos]]
-    -  [[#license][License]]
+-  [[#prerequisites][Prerequisites]]
+-  [[#configuration][Configuration]]
+  -  [[#entry-types][Entry types]]
+  -  [[#file-sources][File sources]]
+  -  [[#custom-entry-types-and-reordering-the-sections][Custom entry types and reordering the sections]]
+-  [[#usage][Usage]]
+-  [[#to-dos][To-Dos]]
+-  [[#license][License]]
 
 ** Prerequisites
 - Emacs 25.1
