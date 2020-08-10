@@ -4,7 +4,7 @@
 
 ;; Author: Akira Komamura <akira.komamura@gmail.com>
 ;; Version: 0.2.2
-;; Package-Requires: ((emacs "25.1") (ivy "0.10") (dash "2.12"))
+;; Package-Requires: ((emacs "25.1") (ivy "0.13") (dash "2.12"))
 ;; Keywords: outlines
 ;; URL: https://github.com/akirak/ivy-omni-org
 
@@ -301,9 +301,8 @@ INP is an entry in the Ivy command."
         (ivy-omni-org--prepend-entry-type type-str out))
     (error inp)))
 
-(ivy-set-display-transformer
- 'ivy-omni-org
- #'ivy-omni-org--display-transformer)
+(ivy-configure 'ivy-omni-org
+  :display-transformer-fn #'ivy-omni-org--display-transformer)
 
 (defun ivy-omni-org--bookmarks ()
   "Get a list of Org bookmarks."
