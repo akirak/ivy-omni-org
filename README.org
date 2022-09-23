@@ -2,6 +2,8 @@
 [[https://melpa.org/#/ivy-omni-org][file:https://melpa.org/packages/ivy-omni-org-badge.svg]]
 [[https://github.com/akirak/ivy-omni-org/workflows/lint/badge.svg?branch=master]]
 
+*Deprecation notice*: Unless you have a specific reason for using this package, I'd recommend you use consult, marginalia, and embark. It is not maintained, and I am not using Ivy.
+
 This is an Emacs package which lets you access Org buffers, Org files,
  Org bookmarks, and custom org-agenda commands via a single Ivy interface. This is analogous to
 =ivy-switch-buffer= with virtual buffers enabled.
